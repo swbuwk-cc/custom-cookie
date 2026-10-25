@@ -1,5 +1,6 @@
 import { appName, imageStorageKey } from "../config"
 import { updateBigCookie } from "./updateBigCookie"
+import { refreshStoredImagePreview } from "./imagePreview"
 
 let uploadRevision = 0
 let activeDownload: AbortController | undefined
@@ -9,14 +10,10 @@ export const isImageLoading = () => loading
 
 export const refreshImagePreview = () => {
   const url = localStorage.getItem(imageStorageKey) || ""
-  const preview = l("fileUploadPreview") as HTMLImageElement | null
+  refreshStoredImagePreview(url)
   const resetButton = l(`${appName}FileResetButton`)
   const title = l(`${appName}FileUploadTitle`)
   const status = l(`${appName}ImageStatus`)
-  if (preview) {
-    preview.src = url
-    preview.style.display = url ? "block" : "none"
-  }
   if (resetButton) resetButton.style.display = url ? "block" : "none"
   if (title) title.style.display = url ? "none" : "block"
   if (status) status.textContent = loading ? "Loading image…" : "Images are stored in this browser, not in the game save."

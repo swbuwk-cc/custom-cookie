@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@types/cookieclicker": "^2.52.5",
+    "gifuct-js": "^2.1.2",
     "image-js": "^0.35.6"
   }
 }

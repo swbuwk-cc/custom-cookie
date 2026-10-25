@@ -2,6 +2,7 @@ import { clearStoredImage, loadImage } from "../handlers/common"
 import { appName, imageStorageKey } from "../config"
 import { updateBigCookie } from "../handlers/updateBigCookie"
 import { settings } from "../settings"
+import { createImagePreview } from "../handlers/imagePreview"
 
 export const createFileUploader = () => {
   const fileUrl = localStorage.getItem(imageStorageKey)
@@ -20,17 +21,7 @@ export const createFileUploader = () => {
   fileUploadTitle.style.display = fileUrl ? "none" : "block" 
   fileUploadTitle.textContent = "Upload a file"
 
-  const fileUploadPreview = document.createElement("img")
-  fileUploadPreview.id = "fileUploadPreview"
-  fileUploadPreview.style.width = "100%"
-  fileUploadPreview.style.height = "100%"
-  fileUploadPreview.style.position = "absolute"
-  fileUploadPreview.style.zIndex = "8"
-  fileUploadPreview.style.display = fileUrl ? "block" : "none"
-  fileUploadPreview.style.objectFit = settings.imageFit 
-  fileUploadPreview.src = fileUrl || ""
-  fileUploadPreview.style.transform = `scale(${settings.zoom})`
-  fileUploadPreview.style.transformOrigin = "center"
+  const fileUploadPreview = createImagePreview(fileUrl || "")
 
   const previewViewport = document.createElement("div")
   previewViewport.style.cssText = "position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:8;"

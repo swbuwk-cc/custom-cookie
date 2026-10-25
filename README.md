@@ -13,6 +13,7 @@ Paste or type an image link and press **Enter/Apply**, or click **Upload a file*
 Remote servers must allow cross-origin downloads (CORS). If a link is blocked, upload the image as a file instead. Storage limits apply; if a download, file, or storage operation fails, the previous image is kept. Images do not travel with exported game saves.
 
 Settings:
+
 - **Round image**: clip the image to a circle (off by default).
 - **Image fit**: contain (default, preserve proportions and fit the whole image), cover (preserve proportions and fill the area), or fill (stretch to fill).
 - **Zoom**: scale the image from 0.5× to 3× (default: 1×). The file preview updates immediately.
@@ -83,5 +84,7 @@ npm run build
 
 - `npm run dev`: watch TypeScript sources and write the development bundle to `build/CustomCookie.js`.
 - `npm run build`: write the production bundle and source map to `dist/`.
+
+Static and animated images share the `ImageSource` interface in `src/images/imageSource.ts`. The controller renders the current frame through the same texture and preview path. Only `src/images/gifSource.ts` handles GIF frame timing and disposal; static sources simply never advance.
 
 The installation snippets above load the published bundle, not your local build. To test local changes, serve the bundle at a URL accessible to the game and load it with `Game.LoadMod(...)`.

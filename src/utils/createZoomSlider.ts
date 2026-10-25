@@ -37,9 +37,9 @@ export const createZoomSlider = () => {
     updateLabel();
     const preview = l("fileUploadPreview");
     if (preview) preview.style.transform = `scale(${settings.zoom})`;
+    updateBigCookie();
   };
   slider.onchange = () => {
-    updateBigCookie();
     PlaySound("snd/tick.mp3");
   };
 
