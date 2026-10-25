@@ -1,56 +1,38 @@
-import { settings } from "../settings"
-import { handleSetImage } from "../handlers/common"
+import { loadImage } from "../handlers/common"
 import { appName } from "../config"
-import { updateBigCookie } from "../handlers/updateBigCookie"
 
 export const createLinkUploader = () => {
-  const linkUploader = document.createElement("div")
-  linkUploader.id = `${appName}LinkUploader`
-  linkUploader.style.display = "flex"
-  linkUploader.style.alignItems = "center"  
-  
-  const linkInput = document.createElement("input")
-  linkInput.type = "text"
-  linkInput.id = `${appName}LinkInput`
-  linkInput.style.userSelect = "all"
-  linkInput.style.width = "300px"
-  linkInput.placeholder = "https://example.com"
-  linkInput.value = settings.url
+  const wrapper = document.createElement("div")
+  wrapper.id = `${appName}LinkUploader`
+  wrapper.style.cssText = "display:flex;align-items:center;gap:6px;width:100%;min-width:0;"
 
-  const applyButton = document.createElement("a")
-  applyButton.id = `${appName}ApplyButton`
-  applyButton.classList.add("smallFancyButton", "option")
-  applyButton.style.width = "30px"
-  applyButton.innerHTML = "Apply"
+  const input = document.createElement("input")
+  input.type = "text"
+  input.id = `${appName}LinkInput`
+  input.style.cssText = "user-select:all;flex:1 1 0;min-width:0;width:100%;box-sizing:border-box;margin:0;"
+  input.placeholder = "Paste image link"
+  input.setAttribute("aria-label", "Image link")
 
-  const clearButton = document.createElement("a")
-  clearButton.id = `${appName}ClearButton`
-  clearButton.classList.add("smallFancyButton", "option")
-  clearButton.style.width = "30px"
-  clearButton.innerHTML = "Clear"
-
-  const clearBigCookie = () => {
-    settings.url = ""
-    linkInput.value = ""
-    PlaySound('snd/tick.mp3');
-    if (settings.isDefaultImage) return
-    updateBigCookie()
-    Game.Notify("Image removed!", "Here we go again", [10, 0])
+  const apply = () => {
+    const url = input.value.trim()
+    if (!url) return
+    input.value = ""
+    void loadImage(url)
   }
-
-  applyButton.onclick = () => {
-    if (!linkInput.value) {
-      clearBigCookie()
-      return
+  input.onkeydown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault()
+      apply()
     }
-    handleSetImage(linkInput.value, false)
   }
 
-  clearButton.onclick = clearBigCookie
+  const button = document.createElement("a")
+  button.classList.add("smallFancyButton", "option")
+  button.textContent = "Apply"
+  button.style.cssText = "flex:0 0 auto;width:auto;min-width:0;text-align:center;margin:0;padding:2px 10px;"
+  button.onclick = apply
 
-  linkUploader.appendChild(linkInput)
-  linkUploader.appendChild(applyButton)
-  linkUploader.appendChild(clearButton)
-
-  return linkUploader
+  wrapper.appendChild(input)
+  wrapper.appendChild(button)
+  return wrapper
 }

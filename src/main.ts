@@ -1,7 +1,7 @@
 import { appName } from "./config";
 import { addSettings } from "./handlers/addSettings";
 import { applySettings } from "./handlers/applySettings";
-import { Settings, settings } from "./settings";
+import { imageFitVariants, settings } from "./settings";
 
 const init = () => {
   const initUpdateMenu = Game.UpdateMenu;
@@ -9,6 +9,7 @@ const init = () => {
     initUpdateMenu();
     addSettings();
   };
+  applySettings();
 };
 
 const save = () => {
@@ -18,11 +19,12 @@ const save = () => {
 const load = (dataStr: string) => {
   const data = JSON.parse(dataStr);
 
-  (Object.keys(data) as (keyof Settings)[]).forEach(
-    <K extends keyof Settings>(key: K) => {
-      settings[key] = data[key];
-    },
-  );
+  if (!data || typeof data !== "object") return;
+  // Only visual preferences belong in saves, never image data or source URLs.
+  for (const key of ["roundImage", "dropShadow", "collapseSettings"] as const) {
+    if (typeof data[key] === "boolean") settings[key] = data[key];
+  }
+  if (imageFitVariants.includes(data.imageFit)) settings.imageFit = data.imageFit;
 
   settings.zoom =
     typeof data.zoom === "number" && Number.isFinite(data.zoom)

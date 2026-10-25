@@ -5,13 +5,11 @@ let imageRevision = 0
 
 export const updateBigCookie = (notify?: boolean) => {
   const revision = ++imageRevision
-  const fileUrl = localStorage.getItem(imageStorageKey) || ""
-  const url = settings.isFromFile ? fileUrl : settings.url
+  const url = localStorage.getItem(imageStorageKey) || ""
 
   if (!url) {
     Game.Loader.Replace("perfectCookie.png", "perfectCookie.png");
     Game.Loader.Replace("cookieShadow.png", "cookieShadow.png");
-    settings.isDefaultImage = true
     return
   }
 
@@ -21,11 +19,9 @@ export const updateBigCookie = (notify?: boolean) => {
   let canvas = document.createElement("canvas");
   let ctx = canvas.getContext("2d");
 
-  image.src = url;
-  image.setAttribute('crossorigin', 'anonymous');
-
   image.onerror = () => {
-    Game.Notify("Image is blocked from this URL!", "Try downloading it as a file", [15, 5])
+    if (revision !== imageRevision) return
+    Game.Notify("Could not render the stored image", "Try uploading another file", [15, 5])
     return
   }
 
@@ -67,7 +63,7 @@ export const updateBigCookie = (notify?: boolean) => {
 
 
     const processedImage = new Image()
-    processedImage.src = canvas.toDataURL()
+    const processedUrl = canvas.toDataURL()
 
     // does not work on Steam
     // ctx.reset();
@@ -97,8 +93,9 @@ export const updateBigCookie = (notify?: boolean) => {
 
       Game.Loader.Replace("perfectCookie.png", canvas.toDataURL());
       Game.Loader.Replace("cookieShadow.png", "filler.png");
-      settings.isDefaultImage = false
       if (notify) Game.Notify(`New image set!`, "Looks wonderful!", [25, 7])
     }
+    processedImage.src = processedUrl
   };
+  image.src = url
 }

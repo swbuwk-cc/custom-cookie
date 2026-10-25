@@ -8,7 +8,11 @@ Big cookie skin manager for Cookie Clicker. Replace the big cookie with an image
 
 Open **Options → Custom Cookie Settings** to configure:
 
-- **Get image from**: use a link or upload a file. Uploaded images are stored in your browser's localStorage, not in the game's save file.
+Paste or type an image link and press **Enter/Apply**, or click **Upload a file**. Both methods download/read the image into browser localStorage and show it in the same preview. The game save contains only visual settings, not images or source URLs.
+
+Remote servers must allow cross-origin downloads (CORS). If a link is blocked, upload the image as a file instead. Storage limits apply; if a download, file, or storage operation fails, the previous image is kept. Images do not travel with exported game saves.
+
+Settings:
 - **Round image**: clip the image to a circle (off by default).
 - **Image fit**: contain (default, preserve proportions and fit the whole image), cover (preserve proportions and fill the area), or fill (stretch to fill).
 - **Zoom**: scale the image from 0.5× to 3× (default: 1×). The file preview updates immediately.

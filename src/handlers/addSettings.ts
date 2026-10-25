@@ -1,9 +1,9 @@
 import { appName, displayName } from "../config"
 import { updateBigCookie } from "./updateBigCookie"
 import { imageFitDescriptions, imageFitVariants, settings } from "../settings"
-import { clearStoredImage, createFileUploader } from "../uploaders/createFileUploader"
+import { createFileUploader } from "../uploaders/createFileUploader"
 import { createLinkUploader } from "../uploaders/createLinkUploader"
-import { handleUploadesrToggle } from "./common"
+import { clearStoredImage, isImageLoading } from "./common"
 import { createSettingsOptions } from "../utils/createSettingsOptions"
 import { createZoomSlider } from "../utils/createZoomSlider"
 
@@ -48,35 +48,22 @@ export const addSettings = () => {
   updateCollapsedState()
   // Settings section end
 
-  // Switch button
-  const switchButton = document.createElement("a")
-  switchButton.id = "switchButton"
-  switchButton.classList.add("smallFancyButton", "option")
-  switchButton.innerHTML = `Get image from: ${settings.isFromFile ? "file" : "link"}`
+  const uploaders = document.createElement("div")
+  uploaders.style.cssText = "display:flex;flex-direction:column;align-items:flex-start;gap:8px;max-width:360px;margin:8px 0 6px;"
+  const separator = document.createElement("label")
+  separator.textContent = "or"
+  uploaders.appendChild(createLinkUploader())
+  uploaders.appendChild(separator)
+  uploaders.appendChild(createFileUploader())
+  settingsListing.appendChild(uploaders)
 
-  const fileUploader = createFileUploader()
-  const linkUploader = createLinkUploader()
-  handleUploadesrToggle(fileUploader, linkUploader)
-
-  switchButton.onclick = () => {
-    settings.isFromFile = !settings.isFromFile
-    handleUploadesrToggle(fileUploader, linkUploader)
-    updateBigCookie()
-    switchButton.innerHTML = `Get image from: ${settings.isFromFile ? "file" : "link"}`
-    PlaySound('snd/tick.mp3');
-  }
-
-  const switchButtonDescription = document.createElement("label")
-  switchButtonDescription.innerHTML = `(note: file uploaded images is stored in your browser (localstorage), not in the game's save file!)`
-
-  settingsListing.appendChild(switchButton)
-  settingsListing.appendChild(switchButtonDescription)
-  settingsListing.appendChild(document.createElement("br"))
-  settingsListing.appendChild(fileUploader)
-  settingsListing.appendChild(linkUploader)
-  // Switch button end
-
-  settingsListing.appendChild(document.createElement("br"))
+  const imageStatus = document.createElement("label")
+  imageStatus.id = `${appName}ImageStatus`
+  imageStatus.style.cssText = "display:block;width:fit-content;margin:0 0 12px;"
+  imageStatus.textContent = isImageLoading()
+    ? "Loading image…"
+    : "Images are stored in this browser, not in the game save."
+  settingsListing.appendChild(imageStatus)
 
   // Rounding button
   const roundingSettingOption = createSettingsOptions("roundImage", "Round image", () => {
@@ -133,8 +120,6 @@ export const addSettings = () => {
   resetButton.innerHTML = `Reset to default`
 
   resetButton.onclick = () => {
-    settings.isFromFile = false
-    settings.url = ""
     settings.roundImage = false
     settings.zoom = 1
     clearStoredImage()
@@ -143,7 +128,6 @@ export const addSettings = () => {
       zoomSlider.value = "1"
       zoomSlider.dispatchEvent(new Event("input"))
     }
-    handleUploadesrToggle(fileUploader, linkUploader)
     updateBigCookie()
     Game.Notify("All image data removed!", "Here we go again", [10, 0])
     PlaySound('snd/tick.mp3');

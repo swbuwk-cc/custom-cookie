@@ -1,14 +1,7 @@
-import { handleUploadesrToggle } from "./common"
-import { appName } from "../config"
+import { refreshImagePreview } from "./common"
 import { updateBigCookie } from "./updateBigCookie"
 
 export const applySettings = () => {
+  refreshImagePreview()
   updateBigCookie()
-
-  const fileUploader = l(`${appName}FileUploader`)
-  const linkUploader = l(`${appName}LinkUploader`)
-
-  if (!fileUploader || !linkUploader) return
-
-  handleUploadesrToggle(fileUploader, linkUploader)
 }
