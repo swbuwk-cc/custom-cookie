@@ -7,8 +7,19 @@ import { imageFitVariants, settings } from "./settings";
 const init = () => {
   const initUpdateMenu = Game.UpdateMenu;
   Game.UpdateMenu = () => {
+    const active = document.activeElement as HTMLInputElement | null;
+    const selection = active?.id === `${appName}LinkInput`
+      ? { start: active.selectionStart, end: active.selectionEnd, direction: active.selectionDirection }
+      : null;
+
     initUpdateMenu();
     addSettings();
+
+    const input = l(`${appName}LinkInput`) as HTMLInputElement | null;
+    if (selection && input) {
+      input.focus({ preventScroll: true });
+      input.setSelectionRange(selection.start, selection.end, selection.direction ?? undefined);
+    }
   };
   applySettings();
 };

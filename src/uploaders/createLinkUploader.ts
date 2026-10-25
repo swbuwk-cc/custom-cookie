@@ -1,6 +1,8 @@
 import { loadImage } from "../handlers/common"
 import { appName } from "../config"
 
+let linkDraft = ""
+
 export const createLinkUploader = () => {
   const wrapper = document.createElement("div")
   wrapper.id = `${appName}LinkUploader`
@@ -10,12 +12,15 @@ export const createLinkUploader = () => {
   input.type = "text"
   input.id = `${appName}LinkInput`
   input.style.cssText = "user-select:all;flex:1 1 0;min-width:0;width:100%;box-sizing:border-box;margin:0;"
+  input.value = linkDraft
+  input.oninput = () => { linkDraft = input.value }
   input.placeholder = "Paste image link"
   input.setAttribute("aria-label", "Image link")
 
   const apply = () => {
     const url = input.value.trim()
     if (!url) return
+    linkDraft = ""
     input.value = ""
     void loadImage(url)
   }
