@@ -26,6 +26,8 @@ Use **Collapse/Expand** to hide or show the settings. The collapsed state is sav
 
 ### Steam
 
+On first upgrade from AnyCookie, the mod imports its visual settings and the selected local image or downloads its saved image URL. Existing CustomCookie data takes priority. Legacy data is kept, and migration runs only once. If a saved URL cannot be downloaded (for example, due to CORS), upload the image manually.
+
 [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3357678293)
 
 ### Userscript (browser)

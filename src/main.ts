@@ -1,4 +1,5 @@
 import { appName } from "./config";
+import { migrateLegacyMod } from "./migrateLegacyMod";
 import { addSettings } from "./handlers/addSettings";
 import { applySettings } from "./handlers/applySettings";
 import { imageFitVariants, settings } from "./settings";
@@ -41,6 +42,7 @@ const customCookieMod = {
 };
 
 const registerMod = () => {
+  void migrateLegacyMod();
   Game.registerMod(appName, customCookieMod);
 };
 
