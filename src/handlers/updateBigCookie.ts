@@ -1,7 +1,8 @@
+import { imageStorageKey } from "../config"
 import { settings } from "../settings"
 
 export const updateBigCookie = (notify?: boolean) => {
-  const fileUrl = localStorage.getItem("anyCookieImage") || ""
+  const fileUrl = localStorage.getItem(imageStorageKey) || ""
   const url = settings.isFromFile ? fileUrl : settings.url
 
   if (!url) {
@@ -20,7 +21,7 @@ export const updateBigCookie = (notify?: boolean) => {
   image.src = url;
   image.setAttribute('crossorigin', 'anonymous');
 
-  image.onerror = (e) => {
+  image.onerror = () => {
     Game.Notify("Image is blocked from this URL!", "Try downloading it as a file", [15, 5])
     return
   }

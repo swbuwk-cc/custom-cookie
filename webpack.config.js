@@ -1,14 +1,21 @@
 const path = require('path');
 const webpack = require('webpack');
+require('dotenv').config();
 
-module.exports = function (env) {
+const appName = process.env.APP_NAME || 'CustomCookie';
+
+module.exports = function (_env, argv) {
+  const isProd = argv.mode === 'production';
+
   return {
-    mode: 'production',
-    devtool: 'source-map',
-    optimization: {
-      minimize: !!env.minimize,
-    },
+    devtool: isProd ? 'source-map' : 'inline-source-map',
+    watchOptions: { ignored: /node_modules/ },
     entry: './src/main.ts',
+    plugins: [
+      new webpack.DefinePlugin({
+        "process.env.APP_NAME": JSON.stringify(appName),
+      }),
+    ],
     module: {
       rules: [
         {
@@ -22,8 +29,9 @@ module.exports = function (env) {
       extensions: ['.js', ".ts"],
     },
     output: {
-      filename: 'AnyCookie.js',
-      path: path.resolve(__dirname, 'dist'),
+      clean: true,
+      filename: `${appName}.js`,
+      path: path.resolve(__dirname, isProd ? 'dist' : 'build'),
     },
   };
 };

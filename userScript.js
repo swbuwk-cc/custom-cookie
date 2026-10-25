@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Any Cookie skin
+// @name         Custom Cookie skin
 // @namespace    http://tampermonkey.net/
 // @version      2024-10-25
 // @description  Big cookie skin manager! Made by @swbuwk
@@ -15,7 +15,7 @@
 
 const readyCheck = setInterval(() => {
   if (typeof Game !== 'undefined' && typeof Game.ready !== 'undefined' && Game.ready) {
-    Game.LoadMod("https://swbuwk.github.io/CC_AnyCookie/dist/AnyCookie.js");
+    Game.LoadMod("https://swbuwk-cc.github.io/custom-cookie/dist/CustomCookie.js");
     clearInterval(readyCheck);
   }
 }, 1000);

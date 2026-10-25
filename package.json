@@ -1,18 +1,25 @@
 {
-  "name": "cookie-clicker-any-cookie",
+  "name": "cookie-clicker-custom-cookie",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "build-dev": "webpack",
-    "build": "webpack --env minimize"
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "dotenv": "^18.0.9",
+    "eslint": "^10.13.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.3",
+    "typescript-eslint": "^8.72.0",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4"
   },

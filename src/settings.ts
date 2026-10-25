@@ -6,6 +6,7 @@ export const imageFitDescriptions = [
 ]
 
 export type Settings = {
+  collapseSettings: boolean
   isFromFile: boolean
   url: string
   roundImage: boolean
@@ -15,6 +16,7 @@ export type Settings = {
 }
 
 export const settings: Settings = {
+  collapseSettings: false,
   isFromFile: false,
   url: "",
   roundImage: false,

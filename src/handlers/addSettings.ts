@@ -1,3 +1,4 @@
+import { appName, displayName, imageStorageKey } from "../config"
 import { updateBigCookie } from "./updateBigCookie"
 import { imageFitDescriptions, imageFitVariants, settings } from "../settings"
 import { createFileUploader } from "../uploaders/createFileUploader"
@@ -11,15 +12,39 @@ export const addSettings = () => {
 
   // Settings section
   const settingsEl = document.createElement("div")
-  settingsEl.id = "ACSettings"
+  settingsEl.id = `${appName}ModSettings`
   settingsEl.className = "subsection"
 
   const settingsTitle = document.createElement("div")
   settingsTitle.className = "title"
-  settingsTitle.innerHTML = "Any Cookie Settings"
+  const titleContent = document.createElement("span")
+  titleContent.style.cssText = "display:inline-flex;align-items:center;gap:12px;"
+  const titleLabel = document.createElement("span")
+  titleLabel.textContent = `${displayName} Settings`
+  titleContent.appendChild(titleLabel)
+
+  const collapseButton = document.createElement("a")
+  collapseButton.className = "smallFancyButton"
+  collapseButton.href = "#"
+  collapseButton.style.cssText = "flex-shrink:0;white-space:nowrap;"
+  titleContent.appendChild(collapseButton)
+  settingsTitle.appendChild(titleContent)
 
   const settingsListing = document.createElement("div")
   settingsListing.className = "listing"
+  settingsListing.id = `${appName}SettingsListing`
+  collapseButton.setAttribute("aria-controls", settingsListing.id)
+  const updateCollapsedState = () => {
+    settingsListing.hidden = settings.collapseSettings
+    collapseButton.textContent = settings.collapseSettings ? "Expand" : "Collapse"
+    collapseButton.setAttribute("aria-expanded", String(!settings.collapseSettings))
+  }
+  collapseButton.onclick = (event) => {
+    event.preventDefault()
+    settings.collapseSettings = !settings.collapseSettings
+    updateCollapsedState()
+  }
+  updateCollapsedState()
   // Settings section end
 
   // Switch button
@@ -107,7 +132,7 @@ export const addSettings = () => {
     settings.isFromFile = false
     settings.url = ""
     settings.roundImage = false
-    localStorage.setItem("anyCookieImage", "")
+    localStorage.setItem(imageStorageKey, "")
     handleUploadesrToggle(fileUploader, linkUploader)
     updateBigCookie()
     Game.Notify("All image data removed!", "Here we go again", [10, 0])

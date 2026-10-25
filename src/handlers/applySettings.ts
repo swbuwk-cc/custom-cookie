@@ -1,12 +1,12 @@
-import { settings } from "../settings"
 import { handleUploadesrToggle } from "./common"
+import { appName } from "../config"
 import { updateBigCookie } from "./updateBigCookie"
 
 export const applySettings = () => {
   updateBigCookie()
 
-  const fileUploader = l("ACfileUploader")
-  const linkUploader = l("AClinkUploader")
+  const fileUploader = l(`${appName}FileUploader`)
+  const linkUploader = l(`${appName}LinkUploader`)
 
   if (!fileUploader || !linkUploader) return
 

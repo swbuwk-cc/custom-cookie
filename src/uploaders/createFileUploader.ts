@@ -1,9 +1,10 @@
 import { handleSetImage } from "../handlers/common"
+import { appName, imageStorageKey } from "../config"
 import { updateBigCookie } from "../handlers/updateBigCookie"
 import { settings } from "../settings"
 
 export const createFileUploader = () => {
-  const fileUrl = localStorage.getItem("anyCookieImage")
+  const fileUrl = localStorage.getItem(imageStorageKey)
 
   const fileUploaderWrapper = document.createElement("div")
   fileUploaderWrapper.style.position = "relative"
@@ -18,7 +19,7 @@ export const createFileUploader = () => {
   fileUploader.style.display = "flex"
   fileUploader.style.alignItems = "center"
   fileUploader.style.justifyContent = "center"
-  fileUploader.id = "ACfileUploader"
+  fileUploader.id = `${appName}FileUploader`
 
   const fileUploadTitle = document.createElement("div")
   fileUploadTitle.style.position = "absolute"
@@ -74,7 +75,7 @@ export const createFileUploader = () => {
   fileInput.style.position = "absolute"
   fileInput.style.cursor = "pointer"
   fileInput.style.zIndex = "10"
-  fileInput.id = "ACfileInput"
+  fileInput.id = `${appName}FileInput`
 
   const fileUploaderDescription = document.createElement("label")
   fileUploaderDescription.style.padding = "2px 0"
@@ -98,7 +99,7 @@ export const createFileUploader = () => {
   }
 
   fileResetButton.onclick = () => {
-    localStorage.setItem("anyCookieImage", "")
+    localStorage.setItem(imageStorageKey, "")
     fileUploadPreview.src = ""
     fileUploadPreview.style.display = "none"
     fileResetButton.style.display = "none"

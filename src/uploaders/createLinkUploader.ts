@@ -1,29 +1,30 @@
 import { settings } from "../settings"
 import { handleSetImage } from "../handlers/common"
+import { appName } from "../config"
 import { updateBigCookie } from "../handlers/updateBigCookie"
 
 export const createLinkUploader = () => {
   const linkUploader = document.createElement("div")
-  linkUploader.id = "AClinkUploader"
+  linkUploader.id = `${appName}LinkUploader`
   linkUploader.style.display = "flex"
   linkUploader.style.alignItems = "center"  
   
   const linkInput = document.createElement("input")
   linkInput.type = "text"
-  linkInput.id = "AClinkInput"
+  linkInput.id = `${appName}LinkInput`
   linkInput.style.userSelect = "all"
   linkInput.style.width = "300px"
   linkInput.placeholder = "https://example.com"
   linkInput.value = settings.url
 
   const applyButton = document.createElement("a")
-  applyButton.id = "ACapplyButton"
+  applyButton.id = `${appName}ApplyButton`
   applyButton.classList.add("smallFancyButton", "option")
   applyButton.style.width = "30px"
   applyButton.innerHTML = "Apply"
 
   const clearButton = document.createElement("a")
-  clearButton.id = "ACclearButton"
+  clearButton.id = `${appName}ClearButton`
   clearButton.classList.add("smallFancyButton", "option")
   clearButton.style.width = "30px"
   clearButton.innerHTML = "Clear"

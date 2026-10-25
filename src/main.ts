@@ -1,3 +1,4 @@
+import { appName } from "./config";
 import { addSettings } from "./handlers/addSettings";
 import { applySettings } from "./handlers/applySettings";
 import { Settings, settings } from "./settings";
@@ -24,17 +25,19 @@ const load = (dataStr: string) => {
   applySettings()
 }
 
-const AnyCookieMod = {
+const customCookieMod = {
   init,
   save,
   load
 }
 
+const registerMod = () => {
+  Game.registerMod(appName, customCookieMod);
+}
+
 if (typeof Steam !== 'undefined') {
   // Wait for Steam to load
-  setTimeout(function () {
-    Game.registerMod('AnyCookie', AnyCookieMod);
-  }, 2000);
+  setTimeout(registerMod, 2000);
 } else {
-  Game.registerMod('AnyCookie', AnyCookieMod);
+  registerMod();
 }

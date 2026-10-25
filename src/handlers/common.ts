@@ -1,14 +1,15 @@
+import { imageStorageKey } from "../config"
 import { settings } from "../settings"
 import { updateBigCookie } from "./updateBigCookie"
 
 export const handleSetImage = (newUrl: string, isFromFile: boolean) => {
-  const oldUrl = isFromFile ? localStorage.getItem("anyCookieImage") : settings.url
+  const oldUrl = isFromFile ? localStorage.getItem(imageStorageKey) : settings.url
   PlaySound('snd/tick.mp3');
   if (oldUrl === newUrl) return
 
   settings.isFromFile = isFromFile
   if (isFromFile) {
-    localStorage.setItem("anyCookieImage", newUrl);
+    localStorage.setItem(imageStorageKey, newUrl);
   } else {
     settings.url = newUrl
   }
