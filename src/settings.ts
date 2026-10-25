@@ -6,6 +6,7 @@ export const imageFitDescriptions = [
 ]
 
 export type Settings = {
+  zoom: number
   collapseSettings: boolean
   isFromFile: boolean
   url: string
@@ -16,6 +17,7 @@ export type Settings = {
 }
 
 export const settings: Settings = {
+  zoom: 1,
   collapseSettings: false,
   isFromFile: false,
   url: "",

@@ -1,10 +1,11 @@
-import { appName, displayName, imageStorageKey } from "../config"
+import { appName, displayName } from "../config"
 import { updateBigCookie } from "./updateBigCookie"
 import { imageFitDescriptions, imageFitVariants, settings } from "../settings"
-import { createFileUploader } from "../uploaders/createFileUploader"
+import { clearStoredImage, createFileUploader } from "../uploaders/createFileUploader"
 import { createLinkUploader } from "../uploaders/createLinkUploader"
 import { handleUploadesrToggle } from "./common"
 import { createSettingsOptions } from "../utils/createSettingsOptions"
+import { createZoomSlider } from "../utils/createZoomSlider"
 
 export const addSettings = () => {
   if (!l("menu")?.childNodes?.length) return
@@ -116,6 +117,9 @@ export const addSettings = () => {
   settingsListing.appendChild(document.createElement("br"))
   // Image fit button end
 
+  settingsListing.appendChild(createZoomSlider())
+  settingsListing.appendChild(document.createElement("br"))
+
   // Drop shadow button
   const dropShadowOption = createSettingsOptions("dropShadow", "Drop shadow")
 
@@ -132,7 +136,13 @@ export const addSettings = () => {
     settings.isFromFile = false
     settings.url = ""
     settings.roundImage = false
-    localStorage.setItem(imageStorageKey, "")
+    settings.zoom = 1
+    clearStoredImage()
+    const zoomSlider = l(`${appName}ZoomSlider`) as HTMLInputElement | null
+    if (zoomSlider) {
+      zoomSlider.value = "1"
+      zoomSlider.dispatchEvent(new Event("input"))
+    }
     handleUploadesrToggle(fileUploader, linkUploader)
     updateBigCookie()
     Game.Notify("All image data removed!", "Here we go again", [10, 0])

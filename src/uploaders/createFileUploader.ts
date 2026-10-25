@@ -3,6 +3,27 @@ import { appName, imageStorageKey } from "../config"
 import { updateBigCookie } from "../handlers/updateBigCookie"
 import { settings } from "../settings"
 
+let uploadRevision = 0
+
+const refreshFilePreview = () => {
+  const url = localStorage.getItem(imageStorageKey) || ""
+  const preview = l("fileUploadPreview") as HTMLImageElement | null
+  const resetButton = l(`${appName}FileResetButton`)
+  const title = l(`${appName}FileUploadTitle`)
+  if (preview) {
+    preview.src = url
+    preview.style.display = url ? "block" : "none"
+  }
+  if (resetButton) resetButton.style.display = url ? "block" : "none"
+  if (title) title.style.display = url ? "none" : "block"
+}
+
+export const clearStoredImage = () => {
+  ++uploadRevision
+  localStorage.setItem(imageStorageKey, "")
+  refreshFilePreview()
+}
+
 export const createFileUploader = () => {
   const fileUrl = localStorage.getItem(imageStorageKey)
 
@@ -22,6 +43,7 @@ export const createFileUploader = () => {
   fileUploader.id = `${appName}FileUploader`
 
   const fileUploadTitle = document.createElement("div")
+  fileUploadTitle.id = `${appName}FileUploadTitle`
   fileUploadTitle.style.position = "absolute"
   fileUploadTitle.style.display = fileUrl ? "none" : "block" 
   fileUploadTitle.innerHTML = "Choose file"
@@ -35,6 +57,12 @@ export const createFileUploader = () => {
   fileUploadPreview.style.display = fileUrl ? "block" : "none"
   fileUploadPreview.style.objectFit = settings.imageFit 
   fileUploadPreview.src = fileUrl || ""
+  fileUploadPreview.style.transform = `scale(${settings.zoom})`
+  fileUploadPreview.style.transformOrigin = "center"
+
+  const previewViewport = document.createElement("div")
+  previewViewport.style.cssText = "position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:8;"
+  previewViewport.appendChild(fileUploadPreview)
 
   const circleCover = document.createElement("div")
   circleCover.id = "fileUploadCircleCover" 
@@ -59,6 +87,7 @@ export const createFileUploader = () => {
   circleHole.style.borderRadius = "50%"
 
   const fileResetButton = document.createElement("div")
+  fileResetButton.id = `${appName}FileResetButton`
   fileResetButton.style.position = "absolute"
   fileResetButton.style.top = "10px"
   fileResetButton.style.right = "10px"
@@ -84,26 +113,22 @@ export const createFileUploader = () => {
   fileInput.onchange = (e: Event) => {
     const target: HTMLInputElement = e.target as HTMLInputElement
     const file = target?.files?.[0]
-    const reader = new FileReader();
-
     if (!file) return
-    reader.readAsDataURL(file);
+    const revision = ++uploadRevision
+    const reader = new FileReader()
 
     reader.onload = () => {
-      handleSetImage(reader.result as string, true)
-      fileUploadPreview.src = reader.result as string
-      fileUploadPreview.style.display = "block"
-      fileResetButton.style.display = "block"
-      fileUploadTitle.style.display = "none"
+      if (revision !== uploadRevision || typeof reader.result !== "string") return
+      handleSetImage(reader.result, true)
+      // The game may have rebuilt the menu while FileReader was running.
+      refreshFilePreview()
+      target.value = ""
     }
+    reader.readAsDataURL(file)
   }
 
   fileResetButton.onclick = () => {
-    localStorage.setItem(imageStorageKey, "")
-    fileUploadPreview.src = ""
-    fileUploadPreview.style.display = "none"
-    fileResetButton.style.display = "none"
-    fileUploadTitle.style.display = "block"
+    clearStoredImage()
 
     updateBigCookie()
     PlaySound('snd/tick.mp3');
@@ -113,7 +138,7 @@ export const createFileUploader = () => {
   circleCover.appendChild(circleHole)
 
   fileUploader.appendChild(fileInput)
-  fileUploader.appendChild(fileUploadPreview)
+  fileUploader.appendChild(previewViewport)
   fileUploader.appendChild(fileResetButton)
   fileUploader.appendChild(fileUploadTitle)
   fileUploader.appendChild(circleCover)

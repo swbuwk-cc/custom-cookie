@@ -11,6 +11,7 @@ Open **Options → Custom Cookie Settings** to configure:
 - **Get image from**: use a link or upload a file. Uploaded images are stored in your browser's localStorage, not in the game's save file.
 - **Round image**: clip the image to a circle (off by default).
 - **Image fit**: contain (default, preserve proportions and fit the whole image), cover (preserve proportions and fill the area), or fill (stretch to fill).
+- **Zoom**: scale the image from 0.5× to 3× (default: 1×). The file preview updates immediately.
 - **Drop shadow**: add a shadow to the image (on by default).
 - **Reset to default**: clear the custom image and restore the original cookie.
 

@@ -1,7 +1,10 @@
 import { imageStorageKey } from "../config"
 import { settings } from "../settings"
 
+let imageRevision = 0
+
 export const updateBigCookie = (notify?: boolean) => {
+  const revision = ++imageRevision
   const fileUrl = localStorage.getItem(imageStorageKey) || ""
   const url = settings.isFromFile ? fileUrl : settings.url
 
@@ -27,6 +30,7 @@ export const updateBigCookie = (notify?: boolean) => {
   }
 
   image.onload = () => {
+    if (revision !== imageRevision) return
     canvas.width = image.width;
     canvas.height = image.width;
 
@@ -38,6 +42,11 @@ export const updateBigCookie = (notify?: boolean) => {
       ctx.closePath();
       ctx.clip()
     }
+
+    // Zoom around the center, keeping the output and round clipping unchanged.
+    ctx.translate(canvas.width / 2, canvas.height / 2)
+    ctx.scale(settings.zoom, settings.zoom)
+    ctx.translate(-canvas.width / 2, -canvas.height / 2)
 
     if (settings.imageFit === "fill") { 
       const w = image.width;
@@ -69,6 +78,7 @@ export const updateBigCookie = (notify?: boolean) => {
     processedImage.height = image.width;
 
     processedImage.onload = () => {
+      if (revision !== imageRevision) return
       const w = image.width;
       canvas.width = w;
       canvas.height = w;
